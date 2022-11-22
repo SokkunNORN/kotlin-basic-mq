@@ -25,6 +25,11 @@ dependencies {
 	implementation("org.liquibase:liquibase-core")
 	runtimeOnly("org.postgresql:postgresql")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+	//	RabbitMQ
+	implementation("org.springframework.boot:spring-boot-starter-amqp")
+	implementation("com.rabbitmq:amqp-client")
+	testImplementation("org.springframework.amqp:spring-rabbit-test")
 }
 
 tasks.withType<KotlinCompile> {

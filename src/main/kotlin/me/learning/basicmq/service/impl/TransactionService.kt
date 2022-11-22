@@ -26,8 +26,12 @@ class TransactionService(
 
     override fun settlement(): Boolean {
         val all = findAll()
-//        delay
-        all.map { it.status.id = 4 }
+        all.map {
+            Thread.sleep(500000000)
+
+            it.status.id = 4
+            this
+        }
         transactionRepo.saveAll(all)
         return true
     }
