@@ -1,0 +1,17 @@
+version: '1'
+
+services:
+
+  db:
+    image: "arm64v8/postgres"
+    container_name: "basic-mq"
+    restart: on-failure
+    environment:
+      - DB_PASSWORD=pwd123
+      - DB_USER=basic_mq
+      - POSTGRES_PASSWORD=pwd123
+    volumes:
+      - ./postgresql/init_db_mq.sql:/docker-entrypoint-initdb.d/init_db_mq.sql
+    ports:
+      - "5431:5431"
+    command: -p 5431
