@@ -28,7 +28,7 @@ dependencies {
 
 	//	RabbitMQ
 	implementation("org.springframework.boot:spring-boot-starter-amqp")
-	implementation("com.rabbitmq:amqp-client")
+	implementation("com.rabbitmq:amqp-client:5.16.0")
 	testImplementation("org.springframework.amqp:spring-rabbit-test")
 }
 

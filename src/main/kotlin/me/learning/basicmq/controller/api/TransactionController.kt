@@ -1,9 +1,17 @@
 package me.learning.basicmq.controller.api
 
+import me.learning.basicmq.controller.request.TransactionRequest
+import me.learning.basicmq.service.ITransactionService
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/v1/transfer")
-class TransactionController {
+class TransactionController (
+    private val service: ITransactionService
+) {
+    @PostMapping
+    fun save(@RequestBody request: TransactionRequest) = service.save(request)
 }
