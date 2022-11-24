@@ -18,17 +18,17 @@ class RabbitConfig {
     @Bean
     fun queue(): Queue = Queue(TRANSFER_QUEUE)
 
-    @Profile("receiver")
-    @Bean
-    fun receiver(): TransactionConsumer {
-        return TransactionConsumer()
-    }
+//    @Profile("receiver")
+//    @Bean
+//    fun receiver(): TransactionConsumer {
+//        return TransactionConsumer()
+//    }
 
-    @Profile("sender")
-    @Bean
-    fun sender(): TransactionProducer {
-        return TransactionProducer()
-    }
+//    @Profile("sender")
+//    @Bean
+//    fun sender(): TransactionProducer {
+//        return TransactionProducer()
+//    }
 
     @Bean
     fun converter(): MessageConverter = Jackson2JsonMessageConverter()

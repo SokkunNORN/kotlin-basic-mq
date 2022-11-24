@@ -13,5 +13,5 @@ class TransactionController (
     private val service: ITransactionService
 ) {
     @PostMapping
-    fun save(@RequestBody request: TransactionRequest) = service.save(request)
+    fun save(@RequestBody request: TransactionRequest) = service.send(request)
 }

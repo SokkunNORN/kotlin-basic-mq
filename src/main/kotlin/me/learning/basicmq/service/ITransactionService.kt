@@ -7,6 +7,6 @@ import me.learning.basicmq.model.Transaction
 interface ITransactionService {
     fun findAll(): List<Transaction>
     fun findById(id: Long): Transaction
-    fun save(request: TransactionRequest): TransactionResponse
+    fun send(request: TransactionRequest): TransactionResponse
     fun settlement(): Boolean
 }

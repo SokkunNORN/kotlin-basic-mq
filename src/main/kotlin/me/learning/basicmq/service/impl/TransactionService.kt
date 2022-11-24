@@ -23,7 +23,7 @@ class TransactionService(
     }
 
     @Transactional
-    override fun save(request: TransactionRequest): TransactionResponse {
+    override fun send(request: TransactionRequest): TransactionResponse {
         if (request.currencyCode !in Transfer.CurrencyCode.values().map { it.name }) error("Invalid currencyCode")
         if (request.amount <= BigDecimal.ZERO) error("Invalid amount")
 
