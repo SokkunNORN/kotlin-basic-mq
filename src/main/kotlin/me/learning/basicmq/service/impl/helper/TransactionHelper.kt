@@ -17,6 +17,11 @@ class TransactionHelper(
     fun sendToRabbitmq(request: Transaction) {
         transactionProducer.send(request)
     }
+    fun saveToSent(request: List<Transaction>) {
+        request.map {
+            transactionProducer.sendAsSentTransaction(it)
+        }
+    }
     @Transactional
     fun save(request: Transaction) {
         repository.save(request)

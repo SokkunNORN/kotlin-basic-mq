@@ -15,7 +15,12 @@ class TransactionProducer {
     private val template: RabbitTemplate = RabbitTemplate()
 
     fun send(request: Transaction) {
-        template.convertAndSend(QueueEnum.TRANSFER_QUEUE, request)
+        template.convertAndSend(QueueEnum.TRANSFER_PENDING_QUEUE, request)
+        log.info("Message sent to rabbitmq")
+    }
+
+    fun sendAsSentTransaction(request: Transaction) {
+        template.convertAndSend(QueueEnum.TRANSFER_SENT_QUEUE, request)
         log.info("Message sent to rabbitmq")
     }
 }

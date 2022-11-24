@@ -29,13 +29,16 @@ class TransactionService(
         if (request.amount <= BigDecimal.ZERO) error("Invalid amount")
         val currencyCode = Transfer.CurrencyCode.values().find { it.name == request.currencyCode } ?: Transfer.CurrencyCode.KHR
 
-        val transaction = Transaction(
-            currencyCode = request.currencyCode,
-            amount = request.amount,
-            statusCode = Transfer.StatusCode.PENDING.name
-        )
+        for (i in 0..10000) {
+            val transaction = Transaction(
+                currencyCode = request.currencyCode,
+                amount = request.amount,
+                statusCode = Transfer.StatusCode.PENDING.name
+            )
 
-        helper.sendToRabbitmq(transaction)
+            helper.sendToRabbitmq(transaction)
+        }
+
 
         return TransactionResponse(
             currencyCode = request.currencyCode,
@@ -44,9 +47,29 @@ class TransactionService(
         )
     }
 
+    @Transactional
+    override fun sign(): Boolean {
+        val all = findAll()
+        val pending = all.filter { it.statusCode == Transfer.StatusCode.PENDING.name }
+        val send = pending.map {
+            it.statusCode = Transfer.StatusCode.SEND.name
+            it
+        }
+        helper.saveToSent(send)
+
+        return true
+    }
+
+    @Transactional
     override fun settlement(): Boolean {
         val all = findAll()
         repository.saveAll(all)
+        return true
+    }
+
+    override fun deleteAll(): Boolean {
+        repository.deleteAll()
+
         return true
     }
 

@@ -1,6 +1,7 @@
 package me.learning.basicmq.rabbitmq.config
 
-import me.learning.basicmq.rabbitmq.QueueEnum.TRANSFER_QUEUE
+import me.learning.basicmq.rabbitmq.QueueEnum.TRANSFER_PENDING_QUEUE
+import me.learning.basicmq.rabbitmq.QueueEnum.TRANSFER_SENT_QUEUE
 import me.learning.basicmq.rabbitmq.consumer.TransactionConsumer
 import me.learning.basicmq.rabbitmq.producer.TransactionProducer
 import org.springframework.amqp.core.*
@@ -16,7 +17,10 @@ import org.springframework.context.annotation.Profile
 class RabbitConfig {
 
     @Bean
-    fun queue(): Queue = Queue(TRANSFER_QUEUE)
+    fun queue(): Queue = Queue(TRANSFER_PENDING_QUEUE)
+
+    @Bean
+    fun queuePending(): Queue = Queue(TRANSFER_SENT_QUEUE)
 
 //    @Profile("receiver")
 //    @Bean
