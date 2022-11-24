@@ -3,6 +3,7 @@ package me.learning.basicmq.service.impl
 import me.learning.basicmq.controller.request.TransactionRequest
 import me.learning.basicmq.controller.response.TransactionResponse
 import me.learning.basicmq.enum.Transfer
+import me.learning.basicmq.helper.Extension.systemFormat
 import me.learning.basicmq.model.Transaction
 import me.learning.basicmq.repository.TransactionRepository
 import me.learning.basicmq.service.ITransactionService
@@ -26,6 +27,7 @@ class TransactionService(
     override fun send(request: TransactionRequest): TransactionResponse {
         if (request.currencyCode !in Transfer.CurrencyCode.values().map { it.name }) error("Invalid currencyCode")
         if (request.amount <= BigDecimal.ZERO) error("Invalid amount")
+        val currencyCode = Transfer.CurrencyCode.values().find { it.name == request.currencyCode } ?: Transfer.CurrencyCode.KHR
 
         val transaction = Transaction(
             currencyCode = request.currencyCode,
@@ -37,7 +39,7 @@ class TransactionService(
 
         return TransactionResponse(
             currencyCode = request.currencyCode,
-            amount = request.amount,
+            amount = request.amount.systemFormat(currencyCode),
             statusCode = Transfer.StatusCode.PENDING.name
         )
     }
