@@ -19,7 +19,7 @@ class TransactionHelper(
     }
     @Transactional
     fun save(request: Transaction) {
-//        repository.save(request)
+        repository.save(request)
         log.info("Saved new transaction.")
     }
 }

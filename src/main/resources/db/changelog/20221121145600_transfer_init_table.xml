@@ -5,20 +5,9 @@
 
     <!--TABLE-->
     <changeSet id="20221121145600_transfer_init_table" dbms="postgresql" author="sokkun">
-        <!-- STATUS -->
-        <createTable tableName="status">
-            <column name="id" type="number(19)">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_status" />
-            </column>
-            <column name="name" type="varchar2">
-                <constraints nullable="false"/>
-            </column>
-            <column name="description" type="text"/>
-        </createTable>
-
         <!-- TRANSACTION -->
         <createTable tableName="transaction">
-            <column name="id" type="number(19)">
+            <column name="id" type="int" value="bigserial" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_transaction"/>
             </column>
             <column name="currency_code" type="varchar2"/>
