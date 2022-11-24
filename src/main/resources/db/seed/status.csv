@@ -1,5 +1,0 @@
-id,name,description
-1,PENDING,Pending
-2,PROCESSING,Processing
-3,FAILED,Failed
-4,SUCCESS,Success

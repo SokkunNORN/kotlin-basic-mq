@@ -5,62 +5,19 @@
 
     <!--TABLE-->
     <changeSet id="20221121145600_transfer_init_table" dbms="postgresql" author="sokkun">
-        <!-- STATUS -->
-        <createTable tableName="status">
-            <column name="id" type="number(19)">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_status" />
-            </column>
-            <column name="name" type="varchar2">
-                <constraints nullable="false"/>
-            </column>
-            <column name="description" type="text"/>
-        </createTable>
-
         <!-- TRANSACTION -->
         <createTable tableName="transaction">
-            <column name="id" type="number(19)">
+            <column name="id" type="int" value="bigserial" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_transaction"/>
             </column>
-            <column name="currency_code" type="number(19)"/>
+            <column name="currency_code" type="varchar2"/>
             <column name="amount" type="decimal" value="0">
                 <constraints nullable="false"/>
             </column>
-            <column name="status_id" type="number(19)">
+            <column name="status_code" type="varchar2">
                 <constraints nullable="false"/>
             </column>
-            <column name="description" type="varchar2"/>
-
-            <column name="bill_number" type="varchar2"/>
-            <column name="store_label" type="varchar2"/>
-            <column name="terminal_label" type="varchar2"/>
-
-            <column name="sender_account" type="varchar2"/>
-            <column name="sender_name" type="varchar2"/>
-
-            <column name="receiver_account" type="varchar2"/>
-            <column name="receiver_name" type="varchar2" />
-
-            <column name="created_at" type="timestamp"/>
-            <column name="updated_at" type="timestamp"/>
         </createTable>
-    </changeSet>
-
-    <!--FOREIGN KEY-->
-    <changeSet id="20221121145600_transfer_init_fk" dbms="postgresql" author="sokkun">
-        <!--TABLE TRANSACTION-->
-        <addForeignKeyConstraint baseTableName="transaction" baseColumnNames="status_id"
-                                 referencedTableName="status"
-                                 constraintName="fk_transaction_status"
-                                 referencedColumnNames="id"/>
-    </changeSet>
-
-    <!-- LOAD DATA -->
-    <changeSet id="20221121145600_transfer_init_data" dbms="postgresql" author="sokkun">
-        <loadData file="db/seed/status.csv" tableName="status">
-            <column name="id" type="NUMERIC"/>
-            <column name="name" type="STRING"/>
-            <column name="description" type="STRING"/>
-        </loadData>
     </changeSet>
 
 </databaseChangeLog>
