@@ -8,6 +8,7 @@ object Transfer {
 
     enum class StatusCode(code: String) {
         PENDING("Pending"),
+        SEND("Send"),
         SUCCESS("Success"),
         FAILED("Failed")
     }

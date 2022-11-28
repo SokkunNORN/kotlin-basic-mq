@@ -15,11 +15,20 @@ class TransactionHelper(
     val log = LoggerFactory.getLogger(javaClass)
 
     fun sendToRabbitmq(request: Transaction) {
-        transactionProducer.send(request)
+        transactionProducer.sendAsPendingTransaction(request)
+    }
+    fun saveToSent(request: Transaction) {
+        transactionProducer.sendAsSentTransaction(request)
     }
     @Transactional
     fun save(request: Transaction) {
         repository.save(request)
         log.info("Saved new transaction.")
+    }
+
+    @Transactional
+    fun remove(id: Long) {
+        log.info("Transaction helper id: $id")
+        repository.deleteById(id)
     }
 }

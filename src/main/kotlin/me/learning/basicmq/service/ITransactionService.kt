@@ -8,5 +8,7 @@ interface ITransactionService {
     fun findAll(): List<Transaction>
     fun findById(id: Long): Transaction
     fun send(request: TransactionRequest): TransactionResponse
+    fun sign(): Boolean
     fun settlement(): Boolean
+    fun deleteAll(): Boolean
 }

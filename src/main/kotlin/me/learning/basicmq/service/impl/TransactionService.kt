@@ -3,6 +3,7 @@ package me.learning.basicmq.service.impl
 import me.learning.basicmq.controller.request.TransactionRequest
 import me.learning.basicmq.controller.response.TransactionResponse
 import me.learning.basicmq.enum.Transfer
+import me.learning.basicmq.helper.Extension.systemFormat
 import me.learning.basicmq.model.Transaction
 import me.learning.basicmq.repository.TransactionRepository
 import me.learning.basicmq.service.ITransactionService
@@ -26,25 +27,54 @@ class TransactionService(
     override fun send(request: TransactionRequest): TransactionResponse {
         if (request.currencyCode !in Transfer.CurrencyCode.values().map { it.name }) error("Invalid currencyCode")
         if (request.amount <= BigDecimal.ZERO) error("Invalid amount")
+        val currencyCode = Transfer.CurrencyCode.values().find { it.name == request.currencyCode } ?: Transfer.CurrencyCode.KHR
 
-        val transaction = Transaction(
-            currencyCode = request.currencyCode,
-            amount = request.amount,
-            statusCode = Transfer.StatusCode.PENDING.name
-        )
+        for (i in 1..500) {
+            val transaction = Transaction(
+                currencyCode = request.currencyCode,
+                amount = request.amount,
+                statusCode = Transfer.StatusCode.PENDING.name,
+                message = "Transaction message #$i"
+            )
 
-        helper.sendToRabbitmq(transaction)
+            helper.sendToRabbitmq(transaction)
+        }
 
         return TransactionResponse(
             currencyCode = request.currencyCode,
-            amount = request.amount,
+            amount = request.amount.systemFormat(currencyCode),
             statusCode = Transfer.StatusCode.PENDING.name
         )
     }
 
+    @Transactional
+    override fun sign(): Boolean {
+        val all = findAll()
+        val pending = all.filter { it.statusCode == Transfer.StatusCode.PENDING.name }
+        pending.map {
+            val sent = Transaction(
+                id = it.id,
+                amount = it.amount,
+                currencyCode = it.currencyCode,
+                statusCode = Transfer.StatusCode.SEND.name
+            )
+
+            helper.saveToSent(sent)
+        }
+
+        return true
+    }
+
+    @Transactional
     override fun settlement(): Boolean {
         val all = findAll()
         repository.saveAll(all)
+        return true
+    }
+
+    override fun deleteAll(): Boolean {
+        repository.deleteAll()
+
         return true
     }
 

@@ -4,5 +4,6 @@ import java.math.BigDecimal
 
 data class TransactionRequest(
     val currencyCode: String,
-    val amount: BigDecimal
+    val amount: BigDecimal,
+    val message: String? = ""
 )

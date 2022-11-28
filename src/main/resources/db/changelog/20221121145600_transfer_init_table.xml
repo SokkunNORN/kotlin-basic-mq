@@ -17,6 +17,7 @@
             <column name="status_code" type="varchar2">
                 <constraints nullable="false"/>
             </column>
+            <column name="message" type="varchar2" />
         </createTable>
     </changeSet>
 

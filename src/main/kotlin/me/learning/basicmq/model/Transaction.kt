@@ -17,5 +17,8 @@ data class Transaction(
     val amount: BigDecimal = BigDecimal(0),
 
     @Column(name = "status_code", nullable = false)
-    val statusCode: String = ""
+    var statusCode: String = "",
+
+    @Column(name = "message")
+    var message: String? = ""
 )
