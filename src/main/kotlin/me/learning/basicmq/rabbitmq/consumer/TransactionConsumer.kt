@@ -20,13 +20,19 @@ class TransactionConsumer(
     @RabbitHandler
     fun consumerMessageOne(response: Transaction) {
         log.info("Get Pending TRSX: $response, instance #1")
-        transactionHelper.save(response)
+        response.run {
+            message = "$message, instance #1"
+            transactionHelper.save(response)
+        }
     }
 
     @RabbitListener(queues = [TRANSFER_PENDING_QUEUE])
     @RabbitHandler
     fun consumerMessageTwo(response: Transaction) {
         log.info("Get Pending TRSX: $response, instance #2")
-        transactionHelper.save(response)
+        response.run {
+            message = "$message, instance #2"
+            transactionHelper.save(response)
+        }
     }
 }
