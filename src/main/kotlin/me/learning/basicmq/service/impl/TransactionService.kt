@@ -1,7 +1,10 @@
 package me.learning.basicmq.service.impl
 
+import me.learning.basicmq.controller.exception.ClientErrorException
+import me.learning.basicmq.controller.exception.handler.ErrorCode
 import me.learning.basicmq.controller.request.TransactionRequest
 import me.learning.basicmq.controller.response.TransactionResponse
+import me.learning.basicmq.controller.response.helper.issue
 import me.learning.basicmq.enum.Transfer
 import me.learning.basicmq.helper.Extension.systemFormat
 import me.learning.basicmq.model.Transaction
@@ -25,20 +28,20 @@ class TransactionService(
 
     @Transactional
     override fun send(request: TransactionRequest): TransactionResponse {
-        if (request.currencyCode !in Transfer.CurrencyCode.values().map { it.name }) error("Invalid currencyCode")
-        if (request.amount <= BigDecimal.ZERO) error("Invalid amount")
+        if (request.currencyCode !in Transfer.CurrencyCode.values().map { it.name }) issue("Invalid Currency Code [USD, KHR]")
+        if (request.amount!! <= BigDecimal.ZERO) issue("Amount cannot be lease or equal than 0.00")
         val currencyCode = Transfer.CurrencyCode.values().find { it.name == request.currencyCode } ?: Transfer.CurrencyCode.KHR
 
-        for (i in 1..500) {
+//        for (i in 1..500) {
             val transaction = Transaction(
-                currencyCode = request.currencyCode,
+                currencyCode = request.currencyCode!!,
                 amount = request.amount,
                 statusCode = Transfer.StatusCode.PENDING.name,
-                message = "Transaction message #$i"
+                message = "Transaction message #"
             )
 
             helper.sendToRabbitmq(transaction)
-        }
+//        }
 
         return TransactionResponse(
             currencyCode = request.currencyCode,
@@ -78,5 +81,5 @@ class TransactionService(
         return true
     }
 
-    private fun error(message: String): Nothing = throw RuntimeException(message)
+//    private fun error(message: String): Nothing = throw RuntimeException(message)
 }
