@@ -22,6 +22,10 @@ class RabbitConfig {
     @Bean
     fun converter(): MessageConverter = Jackson2JsonMessageConverter()
 
+//    # Consumer Class is initialize from config
+//    @Bean
+//    fun transactionQueueConsumer(): TransactionConsumer = TransactionConsumer()
+
     @Bean
     fun template(connectionFactory: ConnectionFactory): AmqpTemplate {
         val rabbitTemplate = RabbitTemplate()
