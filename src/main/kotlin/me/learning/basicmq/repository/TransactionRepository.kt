@@ -6,4 +6,5 @@ import java.util.*
 
 interface TransactionRepository: JpaRepository<Transaction, Long> {
     fun findByHash(hash: String): Optional<Transaction>
+    fun existsByHash(hash: String): Boolean
 }

@@ -13,7 +13,7 @@ data class Transaction(
     val id: Long = 0L,
 
     @Column(name = "hash")
-    val hash: String? = null,
+    var hash: String? = null,
 
     @Column(name = "currency_code", nullable = false)
     val currencyCode: String = "",
