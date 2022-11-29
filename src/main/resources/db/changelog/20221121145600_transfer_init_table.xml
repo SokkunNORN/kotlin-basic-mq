@@ -10,6 +10,9 @@
             <column name="id" type="int" value="bigserial" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_transaction"/>
             </column>
+            <column name="hash" type="varchar2">
+                <constraints unique="true" uniqueConstraintName="hash_constrain" />
+            </column>
             <column name="currency_code" type="varchar2"/>
             <column name="amount" type="decimal" value="0">
                 <constraints nullable="false"/>
@@ -18,6 +21,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="message" type="varchar2" />
+            <column name="created_at" type="timestamp(6)" />
         </createTable>
     </changeSet>
 

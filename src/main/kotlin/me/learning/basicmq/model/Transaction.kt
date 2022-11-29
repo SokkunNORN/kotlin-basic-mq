@@ -1,6 +1,8 @@
 package me.learning.basicmq.model
 
+import org.hibernate.annotations.CreationTimestamp
 import java.math.BigDecimal
+import java.time.LocalDateTime
 import javax.persistence.*
 
 @Entity
@@ -9,6 +11,9 @@ data class Transaction(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,
+
+    @Column(name = "hash")
+    val hash: String? = null,
 
     @Column(name = "currency_code", nullable = false)
     val currencyCode: String = "",
@@ -20,5 +25,9 @@ data class Transaction(
     var statusCode: String = "",
 
     @Column(name = "message")
-    var message: String? = ""
+    var message: String? = "",
+
+    @Column(name = "created_at")
+    @CreationTimestamp
+    val createdAt: LocalDateTime? = LocalDateTime.now()
 )
