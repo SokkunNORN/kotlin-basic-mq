@@ -1,6 +1,6 @@
 package me.learning.basicmq.controller.request
 
-import me.learning.basicmq.extension.getOrElseThrow
+import me.learning.basicmq.common.getOrElseThrow
 import java.math.BigDecimal
 
 data class TransactionRequest(

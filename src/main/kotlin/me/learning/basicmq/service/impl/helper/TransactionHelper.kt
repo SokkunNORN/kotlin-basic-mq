@@ -31,4 +31,8 @@ class TransactionHelper(
         log.info("Transaction helper id: $id")
         repository.deleteById(id)
     }
+
+    fun convertHash(request: Transaction): String? {
+        return null
+    }
 }
