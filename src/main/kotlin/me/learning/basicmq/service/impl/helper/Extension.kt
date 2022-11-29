@@ -29,5 +29,6 @@ fun Transaction.getHash(): String? {
     val json = objectMapper.writeValueAsString(this)
     val dataByte = json.toByteArray()
     val result = DigestUtils.md5Digest(dataByte)
+
     return Base64.getEncoder().encodeToString(result)
 }
