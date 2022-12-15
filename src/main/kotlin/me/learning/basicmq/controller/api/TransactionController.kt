@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController
 class TransactionController (
     private val service: ITransactionService
 ) {
+    @GetMapping("/all")
+    fun findAll() = service.findAll()
     @PostMapping
     fun save(@RequestBody request: TransactionRequest) = service.send(request)
     @GetMapping("/send")

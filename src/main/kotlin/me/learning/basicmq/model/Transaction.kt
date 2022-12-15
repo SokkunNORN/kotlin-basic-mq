@@ -1,5 +1,9 @@
 package me.learning.basicmq.model
 
+import me.learning.basicmq.common.Extension.systemFormat
+import me.learning.basicmq.controller.response.TransactionResponse
+import me.learning.basicmq.enum.Transfer
+import me.learning.basicmq.helper.Extension.systemFormat
 import org.hibernate.annotations.CreationTimestamp
 import java.math.BigDecimal
 import java.time.LocalDateTime
@@ -30,4 +34,15 @@ data class Transaction(
     @Column(name = "created_at")
     @CreationTimestamp
     val createdAt: LocalDateTime? = LocalDateTime.now()
-)
+) {
+    fun toResponse () : TransactionResponse {
+        val currencyEnum = Transfer.CurrencyCode.values().find { it.name == this.currencyCode } ?: Transfer.CurrencyCode.KHR
+        return TransactionResponse(
+            currencyCode = this.currencyCode,
+            amount = this.amount.systemFormat(currencyEnum),
+            statusCode = this.statusCode,
+            message = this.message,
+            createdAt = this.createdAt.systemFormat()
+        )
+    }
+}

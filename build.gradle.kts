@@ -30,6 +30,9 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-amqp")
 	implementation("com.rabbitmq:amqp-client:5.16.0")
 	testImplementation("org.springframework.amqp:spring-rabbit-test")
+
+	implementation("org.springframework.boot:spring-boot-starter-aop")
+	implementation("com.bucket4j:bucket4j-core:8.1.1")
 }
 
 tasks.withType<KotlinCompile> {

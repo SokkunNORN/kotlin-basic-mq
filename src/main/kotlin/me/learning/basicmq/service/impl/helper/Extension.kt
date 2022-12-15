@@ -26,7 +26,7 @@ fun Transaction.toResponse(): TransactionResponse {
 
 fun Transaction.getHash(): String? {
     val objectMapper: ObjectMapper = Jackson2ObjectMapperBuilder().createXmlMapper(false).build()
-    val json = objectMapper.writeValueAsString(this)
+    val json = objectMapper.writeValueAsString(this.toResponse())
     val dataByte = json.toByteArray()
     val result = DigestUtils.md5Digest(dataByte)
 
