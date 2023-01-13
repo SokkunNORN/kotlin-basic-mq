@@ -2,6 +2,7 @@ package me.learning.basicmq.config
 
 import io.github.bucket4j.Bandwidth
 import io.github.bucket4j.Bucket
+import io.github.bucket4j.Refill
 import me.learning.basicmq.controller.exception.TooManyRequestsException
 import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.annotation.Around
@@ -15,10 +16,23 @@ import java.time.Duration
 class RateLimitConfig {
     private val log = LoggerFactory.getLogger(javaClass)
 
+    companion object {
+        private const val CAPACITY: Long = 10
+        private const val SECOND: Long = 1
+
+        private const val INIT_TOKEN: Long = 1
+    }
+
+    // greedy ~ try to add token with no delay
+    private val refill = Refill.greedy(INIT_TOKEN, Duration.ofSeconds(SECOND))
+
+    private val bandwidth = Bandwidth.classic(CAPACITY, refill)
+
+    // $INIT_TOKEN contains $CAPACITY request for every $SECOND
     private val bucket = Bucket.builder()
-        .addLimit(Bandwidth.simple(10, Duration.ofSeconds(1))) // 10 Request for 1 second
-        .addLimit(Bandwidth.simple(1, Duration.ofMillis(100))) // 100 ms for each request
+        .addLimit(bandwidth)
         .build()
+
 
     @Around("@annotation(me.learning.basicmq.annotation.RateLimit)")
     fun limit(point: ProceedingJoinPoint): Any {
