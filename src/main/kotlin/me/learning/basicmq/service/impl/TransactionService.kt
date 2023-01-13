@@ -1,5 +1,6 @@
 package me.learning.basicmq.service.impl
 
+import me.learning.basicmq.annotation.RateLimit
 import me.learning.basicmq.controller.request.TransactionRequest
 import me.learning.basicmq.controller.response.TransactionResponse
 import me.learning.basicmq.controller.response.helper.issue
@@ -9,7 +10,6 @@ import me.learning.basicmq.repository.TransactionRepository
 import me.learning.basicmq.service.ITransactionService
 import me.learning.basicmq.service.impl.helper.TransactionHelper
 import me.learning.basicmq.service.impl.helper.getHash
-import me.learning.basicmq.service.impl.helper.toResponse
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
@@ -21,8 +21,10 @@ class TransactionService(
     private val helper: TransactionHelper
 ) : ITransactionService {
     private val log = LoggerFactory.getLogger(javaClass)
-
-    override fun findAll(): List<Transaction> = repository.findAll()
+    @RateLimit
+    override fun findAll(): List<TransactionResponse> {
+        return repository.findAll().map { it.toResponse() }
+    }
 
     override fun findById(id: Long): Transaction = repository.findById(id).orElseThrow {
         throw RuntimeException("Transaction Id: [$id] not found")
@@ -37,7 +39,7 @@ class TransactionService(
             currencyCode = request.currencyCode,
             amount = request.amount,
             statusCode = Transfer.StatusCode.PENDING.name,
-            message = "Transaction message #"
+            message = request.message
         )
         log.info("Transaction Hash: ${transaction.getHash()}")
 
@@ -53,7 +55,7 @@ class TransactionService(
 
     @Transactional
     override fun sign(): Boolean {
-        val all = findAll()
+        val all = repository.findAll()
         val pending = all.filter { it.statusCode == Transfer.StatusCode.PENDING.name }
         pending.map {
             val sent = Transaction(
@@ -71,7 +73,7 @@ class TransactionService(
 
     @Transactional
     override fun settlement(): Boolean {
-        val all = findAll()
+        val all = repository.findAll()
         repository.saveAll(all)
         return true
     }

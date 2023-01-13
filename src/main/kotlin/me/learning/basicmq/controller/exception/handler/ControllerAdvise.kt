@@ -1,9 +1,6 @@
 package me.learning.basicmq.controller.exception.handler
 
-import me.learning.basicmq.controller.exception.ClientErrorException
-import me.learning.basicmq.controller.exception.IdNotFoundException
-import me.learning.basicmq.controller.exception.MissingFieldRequiredException
-import me.learning.basicmq.controller.exception.RecordExistException
+import me.learning.basicmq.controller.exception.*
 import me.learning.basicmq.controller.response.helper.ResponseWrapper
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
@@ -77,5 +74,15 @@ class ControllerAdvise {
         val response = ResponseWrapper.error(error = ErrorCode.METHOD_NOT_ALLOWED, message = "")
 
         return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(response)
+    }
+
+    @ExceptionHandler(TooManyRequestsException::class)
+    fun tooManyRequestsException(
+        request: HttpServletRequest?,
+        e: TooManyRequestsException
+    ): ResponseEntity<ResponseWrapper<Any>> {
+        val response = ResponseWrapper.error(error = ErrorCode.TOO_MANY_REQUESTS, message = e.description)
+
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(response)
     }
 }
